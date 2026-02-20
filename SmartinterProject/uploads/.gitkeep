@@ -1,0 +1,3 @@
+# This folder stores uploaded retinal images
+# Images are automatically saved here when users upload through the web interface
+# This file ensures the folder is tracked by git

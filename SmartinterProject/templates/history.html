@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction History - Diabetic Retinopathy Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-eye"></i>
+                <span>DR Detection</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('history') }}" class="active">History</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span>{{ username }}</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- History Section -->
+    <section class="history-section">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-history"></i> Prediction History</h1>
+                <p>View your previous diabetic retinopathy detection results</p>
+            </div>
+
+            {% if predictions and predictions|length > 0 %}
+                <div class="history-table-wrapper">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Image Name</th>
+                                <th>Diagnosis</th>
+                                <th>Confidence</th>
+                                <th>Severity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pred in predictions %}
+                            <tr>
+                                <td>
+                                    <i class="fas fa-calendar"></i>
+                                    {{ pred.timestamp[:10] }}<br>
+                                    <small>{{ pred.timestamp[11:19] }}</small>
+                                </td>
+                                <td>
+                                    <i class="fas fa-file-image"></i>
+                                    {{ pred.image_name }}
+                                </td>
+                                <td>
+                                    <span class="diagnosis-badge {% if pred.prediction == 'No DR' %}badge-success{% elif pred.prediction in ['Mild', 'Moderate'] %}badge-warning{% else %}badge-danger{% endif %}">
+                                        {{ pred.prediction }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="mini-progress">
+                                        <div class="mini-progress-bar" style="width: {{ pred.confidence }}%"></div>
+                                    </div>
+                                    <span class="confidence-value">{{ "%.2f"|format(pred.confidence) }}%</span>
+                                </td>
+                                <td>
+                                    {% if pred.prediction == 'No DR' %}
+                                        <span class="severity-level level-none">
+                                            <i class="fas fa-check-circle"></i> None
+                                        </span>
+                                    {% elif pred.prediction == 'Mild' %}
+                                        <span class="severity-level level-mild">
+                                            <i class="fas fa-info-circle"></i> Mild
+                                        </span>
+                                    {% elif pred.prediction == 'Moderate' %}
+                                        <span class="severity-level level-moderate">
+                                            <i class="fas fa-exclamation-triangle"></i> Moderate
+                                        </span>
+                                    {% elif pred.prediction == 'Severe' %}
+                                        <span class="severity-level level-severe">
+                                            <i class="fas fa-exclamation-circle"></i> Severe
+                                        </span>
+                                    {% elif pred.prediction == 'Proliferative DR' %}
+                                        <span class="severity-level level-proliferative">
+                                            <i class="fas fa-times-circle"></i> Proliferative
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="history-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-chart-pie"></i>
+                        <h3>{{ predictions|length }}</h3>
+                        <p>Total Scans</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-check"></i>
+                        <h3>{{ predictions[0].timestamp[:10] if predictions else 'N/A' }}</h3>
+                        <p>Last Scan</p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <h3>No History Found</h3>
+                    <p>You haven't performed any scans yet. Upload a retinal image to get started.</p>
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <i class="fas fa-upload"></i>
+                        Upload Image
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Diabetic Retinopathy Detection System. All rights reserved.</p>
+            <p>Powered by Xception Deep Learning Model</p>
+        </div>
+    </footer>
+</body>
+</html>

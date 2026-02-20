@@ -1,0 +1,29 @@
+# Diabetic Retinopathy Detection System - Requirements
+
+# Core Web Framework
+Flask==2.3.0
+Werkzeug==2.3.0
+
+# Deep Learning & Machine Learning
+tensorflow==2.20.0
+numpy==2.1.3
+pandas==2.2.0
+
+# Image Processing
+Pillow==11.0.0
+
+# IBM Cloudant Database (Optional - uncomment if you want database support)
+# cloudant==2.15.0
+
+# Additional Utilities
+python-dateutil==2.8.2
+requests==2.31.0
+
+# Development Dependencies (Optional)
+python-dotenv==0.19.2
+
+# Note: TensorFlow 2.20.0 comes with Keras built-in (no separate keras package needed)
+# If you need GPU support, install: pip install tensorflow[and-cuda]
+# For CPU-only (lighter), current setup works fine
+# 
+# App works without Cloudant! Add it later if you want to store predictions in database.

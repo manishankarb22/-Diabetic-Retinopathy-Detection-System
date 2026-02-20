@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus — Create Access</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== CORE RESET ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* Strict no-scroll */
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: #fff;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body { display: flex; }
+
+        /* ===== LEFT PANEL (DARK HERO) ===== */
+        .left-panel {
+            width: 45%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 80px;
+            position: relative;
+            border-right: 1px solid #222;
+        }
+
+        /* Noise Texture */
+        .left-panel::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0.04;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            font-size: 24px;
+            margin-bottom: auto;
+        }
+
+        .brand-dot { width: 12px; height: 12px; background: #fff; border-radius: 50%; }
+
+        .hero-text h1 {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .features-list li {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .features-list li i { color: #fff; font-size: 10px; }
+
+        .left-footer { margin-top: auto; color: #444; font-size: 11px; letter-spacing: 2px; }
+
+        /* ===== RIGHT PANEL (FORM) ===== */
+        .right-panel {
+            flex: 1;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            color: #000;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .form-header { margin-bottom: 30px; }
+        .form-header h2 { font-size: 28px; font-weight: 700; letter-spacing: -1px; }
+        .form-header p { color: #666; font-size: 14px; margin-top: 4px; }
+
+        .login-form { display: flex; flex-direction: column; gap: 16px; }
+
+        .field-group { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+        .input-wrapper input {
+            width: 100%;
+            height: 48px;
+            padding: 0 14px;
+            font-size: 14px;
+            border: 2px solid #eee;
+            background: #fff;
+            border-radius: 0;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .input-wrapper input:focus { border-color: #000; }
+
+        .terms-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .terms-row input { accent-color: #000; }
+        .terms-row a { color: #000; font-weight: 600; text-decoration: none; border-bottom: 1px solid #ddd; }
+
+        .btn-submit {
+            margin-top: 10px;
+            height: 52px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-submit:hover { background: #333; gap: 18px; }
+
+        .auth-footer {
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+            margin-top: 20px;
+        }
+        .auth-footer a { color: #000; font-weight: 700; text-decoration: none; }
+
+        /* Flash Message Styling */
+        .flash-wrap { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+        .flash-item {
+            background: #000; color: #fff; padding: 14px 20px; font-size: 13px;
+            border-left: 4px solid #fff; margin-bottom: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex; align-items: center; gap: 15px;
+        }
+
+        @media (max-width: 1000px) {
+            .left-panel { display: none; }
+            body { background: #fff; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="flash-wrap">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                <div class="flash-item">
+                    <span>{{ message }}</span>
+                    <i class="fas fa-times" style="cursor:pointer; opacity:0.5" onclick="this.parentElement.remove()"></i>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="left-panel">
+        <div class="brand">
+            <div class="brand-dot"></div>
+            NEXUS
+        </div>
+
+        <div class="hero-text">
+            <h1>Secure Your<br>Digital Identity.</h1>
+            <ul class="features-list">
+                <li><i class="fas fa-circle"></i> Encrypted Data Storage</li>
+                <li><i class="fas fa-circle"></i> Real-time System Access</li>
+                <li><i class="fas fa-circle"></i> Priority Neural Processing</li>
+                <li><i class="fas fa-circle"></i> No Third-party Tracking</li>
+            </ul>
+        </div>
+
+        <div class="left-footer">
+            EST. 2024 &bull; GLOBAL ACCESS NODE
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <div class="form-container">
+            <div class="form-header">
+                <h2>Create Access</h2>
+                <p>Join the Nexus network to begin.</p>
+            </div>
+
+            <form action="{{ url_for('register') }}" method="post" class="login-form" id="registerForm">
+                
+                <div class="field">
+                    <label>Username</label>
+                    <div class="input-wrapper">
+                        <input type="text" name="username" id="username" required placeholder="Choose identifier">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Email Address</label>
+                    <div class="input-wrapper">
+                        <input type="email" name="email" id="email" required placeholder="name@domain.com">
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field">
+                        <label>Password</label>
+                        <div class="input-wrapper">
+                            <input type="password" name="password" id="password" required>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Confirm</label>
+                        <div class="input-wrapper">
+                            <input type="password" name="confirm_password" id="confirm_password" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terms-row">
+                    <input type="checkbox" name="terms" required id="terms">
+                    <label for="terms">I accept the <a href="#">Terms of Access</a></label>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <span>Register Account</span>
+                    <i class="fas fa-user-plus"></i>
+                </button>
+
+                <div class="auth-footer">
+                    Already registered? <a href="{{ url_for('login') }}">Authorize here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Form Validation (Password Match)
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            const pass = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm_password').value;
+            
+            if (pass !== confirm) {
+                e.preventDefault();
+                alert('Security Error: Passwords do not match.');
+            }
+        });
+
+        // Auto-dismiss notifications
+        setTimeout(() => {
+            const items = document.querySelectorAll('.flash-item');
+            items.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateX(20px)';
+                el.style.transition = '0.4s';
+                setTimeout(() => el.remove(), 400);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>
